@@ -10,56 +10,66 @@ print("ainda não levamos em conta dados como valor de apostas e etc, apenas os 
 cmd = input('vamos começar? digite s para começar ou n para sair: ')
 
 if cmd == 's':
-
     num_players = int(input(
             "vamos começar com uma partida simples, informe o número de jogadores que irão jogar com o robô (1-4): "))
     
     while num_players == 0 or num_players > 5:
         num_players = input(
             "Informe o número de jogadores que irão jogar com o robô (1-4): ")
-    
-    
-    deck = cards.shuffle();
+
+    deck = cards.shuffle()
     
     players = []
     player_cards = []
-    hand = []
-    
-    while len(players) < num_players+1:
-        while len(hand) < 2:
-            card = random.randint(0, 51)
-    
-            while card in player_cards:
-                card = random.randint(0, 51)
-    
+
+    while len(players) < num_players:
+        players.append(player.Player([]))
+
+    j = 0
+    while j < 2:
+        i = 0
+        while i < num_players:
+            card = deck.pop(len(deck)-1)
             player_cards.append(card)
-            hand.append(cards.cards[card])
-    
-        if len(players) == num_players:
-            robot = player.Player(hand)
-            players.append(robot)
-        else:
-            players.append(player.Player(hand))
-    
-        hand = []
-    
-    print("as cartas foram dadas! as cartas do robo são as seguintes: ")
-    print(str(robot.hand[0]) + ' ' + str(robot.hand[1]));
-    
-    
+            players[i].hand.append(card)
+            deck = deck[:-1]  # deck sem a ultima carta
+            i += 1
+        j += 1
+
     table_cards = []
-    discard_cards = []
-    while len(table_cards) < 5:
-        card = random.randint(0, 51)
+    deck = deck[:-1]  # deck sem a ultima carta
+
+    while len(table_cards) < 3:
+        table_cards.append(deck.pop(len(deck)-1))
+        deck = deck[:-1]  # deck sem a ultima carta
     
-        while (card in player_cards) or (card in table_cards):
-            card = random.randint(0, 51)
-    
-        table_cards.append(cards.cards[card])
-    
-    print("a primeira rodada de 3 cartas foi lançada!")
+    print("flop foi lançado!")
     print("segue as cartas em mesa: ")
     
     print(table_cards[0] + ' ' + table_cards[1] + ' ' + table_cards[2])
     
     print("deseja virar mais uma carta?")
+    input("aperte enter para virar o turn")
+
+    deck = deck[:-1]  # deck sem a ultima carta
+    table_cards.append(deck.pop(len(deck)-1))
+
+    print(table_cards[3])
+    print("segue as cartas em mesa:")
+    print(table_cards[0] + ' ' + table_cards[1] + ' ' + table_cards[2] + ' ' + table_cards[3])
+
+    input("aperte enter para o river")
+
+    deck = deck[:-1]  # deck sem a ultima carta
+    table_cards.append(deck.pop(len(deck)-1))
+
+    print(table_cards[4])
+    print("segue as cartas em mesa:")
+    print(table_cards[0] + ' ' + table_cards[1] + ' ' + table_cards[2] + ' ' + table_cards[3] + ' ' + table_cards[4])
+
+    print("cartas dos " + str(num_players) + " jogadores: ")
+
+    i = 0
+    while i < num_players:
+        print("jogador " + str(i+1) + ": " + players[i].hand[0] + ' ' + players[i].hand[1])
+        i += 1
