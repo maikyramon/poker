@@ -1,122 +1,106 @@
-parA1 = ['♠A', '♥A']
-parA2 = ['♠A', '♣A']
-parA3 = ['♠A', '♦A']
-parA4 = ['♥A', '♣A']
-parA5 = ['♥A', '♦A']
-parA6 = ['♣A', '♦A']
+import collections
 
-parA = [parA1, parA2, parA3, parA4, parA5, parA6]
 
-par21 = ['♠2', '♥2']
-par22 = ['♠2', '♣2']
-par23 = ['♠2', '♦2']
-par24 = ['♥2', '♣2']
-par25 = ['♥2', '♦2']
-par26 = ['♣2', '♦2']
+def suit(card):
+    return{
+        '♠': 0,
+        '♥': 1,
+        '♣': 2,
+        '♦': 3
+    }.get(card)
 
-par2 = [par21, par22, par23, par24, par25, par26]
 
-par31 = ['♠3', '♥3']
-par32 = ['♠3', '♣3']
-par33 = ['♠3', '♦3']
-par34 = ['♥3', '♣3']
-par35 = ['♥3', '♦3']
-par36 = ['♣3', '♦3']
+def sort_hand(hand):
+    h = []
+    i = 0
 
-par3 = [par31, par32, par33, par34, par35, par36]
+    while i < len(hand):
+        c = {'J': 11, 'Q': 12, 'K': 13, 'A': 14}.get(hand[i][0], 0)
 
-par41 = ['♠4', '♥4']
-par42 = ['♠4', '♣4']
-par43 = ['♠4', '♦4']
-par44 = ['♥4', '♣4']
-par45 = ['♥4', '♦4']
-par46 = ['♣4', '♦4']
+        if c < 11:
+            c = int(hand[i][0])
 
-par4 = [par41, par42, par43, par44, par45, par46]
+            if c == 0:
+                c = 10
 
-par51 = ['♠5', '♥5']
-par52 = ['♠5', '♣5']
-par53 = ['♠5', '♦5']
-par54 = ['♥5', '♣5']
-par55 = ['♥5', '♦5']
-par56 = ['♣5', '♦5']
+        h.append(c)
+        i += 1
 
-par5 = [par51, par52, par53, par54, par55, par56]
+    h.sort(reverse=True)
 
-par61 = ['♠6', '♥6']
-par62 = ['♠6', '♣6']
-par63 = ['♠6', '♦6']
-par64 = ['♥6', '♣6']
-par65 = ['♥6', '♦6']
-par66 = ['♣6', '♦6']
+    return h
 
-par6 = [par61, par62, par63, par64, par65, par66]
 
-par71 = ['♠7', '♥7']
-par72 = ['♠7', '♣7']
-par73 = ['♠7', '♦7']
-par74 = ['♥7', '♣7']
-par75 = ['♥7', '♦7']
-par76 = ['♣7', '♦7']
+def flush(hand):
+    i = 0
+    seq = [0, 0, 0, 0, 0]
+    while i < len(hand):
+        seq[suit(hand[i][0])] += 1
 
-par7 = [par71, par72, par73, par74, par75, par76]
+    if max(seq) >= 5:
+        return True
 
-par81 = ['♠8', '♥8']
-par82 = ['♠8', '♣8']
-par83 = ['♠8', '♦8']
-par84 = ['♥8', '♣8']
-par85 = ['♥8', '♦8']
-par86 = ['♣8', '♦8']
 
-par8 = [par81, par82, par83, par84, par85, par86]
+def sequence(hand):
+    h = sort_hand(hand)
+    i = 0
+    seq = []
 
-par91 = ['♠9', '♥9']
-par92 = ['♠9', '♣9']
-par93 = ['♠9', '♦9']
-par94 = ['♥9', '♣9']
-par95 = ['♥9', '♦9']
-par96 = ['♣9', '♦9']
+    while i < len(h):
+        if i > 0:
+            if (h[i-1] - h[i] == 1) or (h[i-1] == 14 and h[i] == 2):
+                if i == 1:
+                    seq.append(h[0])
+                    seq.append(h[1])
+                else:
+                    seq.append(h[i])
 
-par9 = [par91, par92, par93, par94, par95, par96]
+        return len(seq) > 4
 
-par101 = ['♠10', '♥10']
-par102 = ['♠10', '♣10']
-par103 = ['♠10', '♦10']
-par104 = ['♥10', '♣10']
-par105 = ['♥10', '♦10']
-par106 = ['♣10', '♦10']
 
-par10 = [par101, par102, par103, par104, par105, par106]
+def three(hand):
+    if count_duplicates(hand)[1] == 3:
+        return count_duplicates(hand)[0]
+    else:
+        return 0
 
-parJ1 = ['♠J', '♥J']
-parJ2 = ['♠J', '♣J']
-parJ3 = ['♠J', '♦J']
-parJ4 = ['♥J', '♣J']
-parJ5 = ['♥J', '♦J']
-parJ6 = ['♣J', '♦J']
 
-parJ = [parJ1, parJ2, parJ3, parJ4, parJ5, parJ6]
+def four(hand):
+    if count_duplicates(hand)[1] == 4:
+        return count_duplicates(hand)[0]
+    else:
+        return 0
 
-parQ1 = ['♠Q', '♥Q']
-parQ3 = ['♠Q', '♦Q']
-parQ2 = ['♠Q', '♣Q']
-parQ4 = ['♥Q', '♣Q']
-parQ5 = ['♥Q', '♦Q']
-parQ6 = ['♣Q', '♦Q']
 
-parQ = [parQ1, parQ2, parQ3, parQ4, parQ5, parQ6]
+def pair(hand):
+    c = count_duplicates(hand, 1)
+    if c[0][0] > 0:
+        return c[0][0]
+    else:
+        return 0
 
-parK1 = ['♠K', '♥K']
-parK2 = ['♠K', '♣K']
-parK3 = ['♠K', '♦K']
-parK4 = ['♥K', '♣K']
-parK5 = ['♥K', '♦K']
-parK6 = ['♣K', '♦K']
 
-parK = [parK1, parK2, parK3, parK4, parK5, parK6]
+def two_pairs(hand):
+    h = count_duplicates(hand, 2)
 
-triK1 = ['♠K', '♥K', '♣K']
-triK2 = ['♠K', '♣K', '♦K']
-triK3 = ['♥K', '♣K', '♦K']
+    if h[0][1] == 2 and h[1][1] == 2:
+        return h
 
-triK = [triK1, triK2, triK3]
+
+def count_duplicates(hand, n):
+    h = sort_hand(hand)
+    count = collections.Counter(h)
+    return count.most_common(n)
+
+
+def full_house(hand):
+    return three(hand) and pair(hand)
+
+
+def straight_flush(hand):
+    return flush(hand) and sequence(hand)
+
+
+def royal_straight_flush(hand):
+    h = sort_hand(hand)
+    return flush(hand) and sequence(hand) and (h[len(h)] == 14)

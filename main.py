@@ -1,6 +1,6 @@
 import cards
 import player
-import random
+import jogadas
 
 print("bem vindo a simulacao de poker kkk")
 print("nosso projeto visa criar um jogador de poker que calcula a porcentagem de sua mão ser a melhor.")
@@ -12,7 +12,7 @@ cmd = input('vamos começar? digite s para começar ou n para sair: ')
 if cmd == 's':
     num_players = int(input(
             "vamos começar com uma partida simples, informe o número de jogadores que irão jogar com o robô (1-4): "))
-    
+
     while num_players == 0 or num_players > 5:
         num_players = input(
             "Informe o número de jogadores que irão jogar com o robô (1-4): ")
@@ -70,6 +70,13 @@ if cmd == 's':
     print("cartas dos " + str(num_players) + " jogadores: ")
 
     i = 0
+    p = 0
+    hand = []
     while i < num_players:
+        p = cards.best_cards(players[i].hand, table_cards)
+        print(p)
+        #j = jogadas.pair(players[i].hand)
+        #j = jogadas.pair(players[i].hand)
         print("jogador " + str(i+1) + ": " + players[i].hand[0] + ' ' + players[i].hand[1])
         i += 1
+
