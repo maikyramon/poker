@@ -1,24 +1,22 @@
 import cards
 import player
-import jogadas
 
 print("bem vindo a simulacao de poker kkk")
-print("nosso projeto visa criar um jogador de poker que calcula a porcentagem de sua mão ser a melhor.")
+print("nosso projeto visa criar um jogador de poker que calcula a jogada na sua mão.")
 print("usamos como base o estilo Texas Hold'em.")
 print("ainda não levamos em conta dados como valor de apostas e etc, apenas os turns e as mãos de cada jogador.")
 
-cmd = input('vamos começar? digite s para começar ou n para sair: ')
+print("vamos começar com uma partida simples")
 
-if cmd == 's':
-    num_players = int(input(
-            "vamos começar com uma partida simples, informe o número de jogadores que irão jogar com o robô (1-4): "))
-
-    while num_players == 0 or num_players > 5:
-        num_players = input(
-            "Informe o número de jogadores que irão jogar com o robô (1-4): ")
+s = 's'
+while s == 's':
+    num_players = 0
+    while num_players < 2 or num_players > 10:
+        print("Informe o número de jogadores que irão jogar (2-10): ")
+        num_players = int(input())
 
     deck = cards.shuffle()
-    
+
     players = []
     player_cards = []
 
@@ -42,20 +40,18 @@ if cmd == 's':
     while len(table_cards) < 3:
         table_cards.append(deck.pop(len(deck)-1))
         deck = deck[:-1]  # deck sem a ultima carta
-    
+
     print("flop foi lançado!")
     print("segue as cartas em mesa: ")
-    
+
     print(table_cards[0] + ' ' + table_cards[1] + ' ' + table_cards[2])
-    
+
     print("deseja virar mais uma carta?")
-    input("aperte enter para virar o turn")
+    input("aperte enter para o turn")
 
     deck = deck[:-1]  # deck sem a ultima carta
     table_cards.append(deck.pop(len(deck)-1))
 
-    print(table_cards[3])
-    print("segue as cartas em mesa:")
     print(table_cards[0] + ' ' + table_cards[1] + ' ' + table_cards[2] + ' ' + table_cards[3])
 
     input("aperte enter para o river")
@@ -63,20 +59,15 @@ if cmd == 's':
     deck = deck[:-1]  # deck sem a ultima carta
     table_cards.append(deck.pop(len(deck)-1))
 
-    print(table_cards[4])
-    print("segue as cartas em mesa:")
     print(table_cards[0] + ' ' + table_cards[1] + ' ' + table_cards[2] + ' ' + table_cards[3] + ' ' + table_cards[4])
 
     print("cartas dos " + str(num_players) + " jogadores: ")
 
     i = 0
-    p = 0
-    hand = []
     while i < num_players:
-        p = cards.best_cards(players[i].hand, table_cards, i)
-        print(p)
-        #j = jogadas.pair(players[i].hand)
-        #j = jogadas.pair(players[i].hand)
-        print("jogador " + str(i+1) + ": " + players[i].hand[0] + ' ' + players[i].hand[1])
+        print("jogador " + str(i+1) + ": " + players[i].hand[0] + ' ' + players[i].hand[1] + ' ' +
+              cards.showdown(players[i].hand, table_cards, i))
         i += 1
 
+    print("Deseja jogar novamente? ")
+    s = input()

@@ -1,8 +1,6 @@
 import random
 import jogadas
 
-import Card
-
 
 cards = ['♠A', '♠2', '♠3', '♠4', '♠5', '♠6', '♠7', '♠8', '♠9', '♠10', '♠J', '♠Q', '♠K',
          '♥A', '♥2', '♥3', '♥4', '♥5', '♥6', '♥7', '♥8', '♥9', '♥10', '♥J', '♥Q', '♥K',
@@ -21,7 +19,7 @@ def shuffle():
     return deck
 
 
-def best_cards(hand, table, player):
+def showdown(hand, table, player):
     h = []
     i = 0
 
@@ -34,49 +32,40 @@ def best_cards(hand, table, player):
         h.append(table[i])
         i += 1
 
-    h = ['♣6', '♣7', '♦10', '♦J', '♦Q', '♦K', '♦A']
+    player += 1
 
     if jogadas.royal_straight_flush(h):
-        print('PLAYER {0} FEZ UM ROYAL STRAIGHT FLUSH!!'.format(str(player)))
-        return
-    p = jogadas.straight_flush(h)
-    if p > 0:
-        print('PLAYER {0} FEZ UM STRAIGHT FLUSH!!'.format(str(player)))
-        return
+        return 'PLAYER {0} FEZ UM ROYAL STRAIGHT FLUSH!!'.format(str(player))
+
+    if jogadas.straight_flush(h):
+        return 'PLAYER {0} FEZ UM STRAIGHT FLUSH!!'.format(str(player))
+
     p = jogadas.flush(h)
     if p > 0:
-        print('PLAYER {0} FEZ UM FLUSH!!'.format(str(player)))
-        return
+        return 'PLAYER {0} FEZ UM FLUSH!!'.format(str(player))
+
     p = jogadas.straight(h)
     if p > 0:
-        print('PLAYER {0} FEZ UMA SEQUÊNCIA!!'.format(str(player)))
-        return
+        return 'PLAYER {0} FEZ UMA SEQUÊNCIA!!'.format(str(player))
+
     p = jogadas.four(h)
     if p > 0:
-        print('PLAYER {0} FEZ UMA QUADRA!!'.format(str(player)))
-        return
+        return 'PLAYER {0} FEZ UMA QUADRA!!'.format(str(player))
+
     p = jogadas.full_house(h)
+    if len(p) > 0:
+        return 'PLAYER {0} FEZ UM FULL HOUSE!!'.format(str(player))
+
+    p = jogadas.three(h, 1)
     if p > 0:
-        print('PLAYER {0} FEZ UM FULL HOUSE!!'.format(str(player)))
-        return
-    p = jogadas.three(h)
-    if p > 0:
-        print('PLAYER {0} FEZ UMA TRINCA!!'.format(str(player)))
-        return
+        return 'PLAYER {0} FEZ UMA TRINCA!!'.format(str(player))
+
     p = jogadas.two_pairs(h)
+    if len(p) > 0:
+        return 'PLAYER {0} FEZ DOIS PARES!'.format(str(player))
+
+    p = jogadas.pair(h, 1)
     if p > 0:
-        print('PLAYER {0} FEZ DOIS PARES!!'.format(str(player)))
-        return
-    p = jogadas.pair(h)
-    if p > 0:
-        print('PLAYER {0} FEZ UM PAR!!'.format(str(player)))
-        return
+        return 'PLAYER {0} FEZ UM PAR!'.format(str(player))
 
-
-    print(p)
-
-    del h[5:6]
-
-    h.sort()
-
-    return h
+    return 'PLAYER {0} NÃO FEZ NADA!'.format(str(player))
