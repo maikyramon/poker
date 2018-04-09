@@ -73,7 +73,7 @@ if cmd == 's':
     p = 0
     hand = []
     while i < num_players:
-        p = cards.best_cards(players[i].hand, table_cards)
+        p = cards.best_cards(players[i].hand, table_cards, i)
         print(p)
         #j = jogadas.pair(players[i].hand)
         #j = jogadas.pair(players[i].hand)

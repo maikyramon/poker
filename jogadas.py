@@ -1,4 +1,5 @@
 import collections
+import Card
 
 
 def suit(card):
@@ -15,47 +16,58 @@ def sort_hand(hand):
     i = 0
 
     while i < len(hand):
-        c = {'J': 11, 'Q': 12, 'K': 13, 'A': 14}.get(hand[i][0], 0)
+        c = {'J': 11, 'Q': 12, 'K': 13, 'A': 14}.get(hand[i][1], 0)
 
         if c < 11:
-            c = int(hand[i][0])
+            c = int(hand[i][1])
 
-            if c == 0:
+            if c == 1:
                 c = 10
 
-        h.append(c)
+        h.append(Card.Card(hand[i][0], c))
         i += 1
 
-    h.sort(reverse=True)
+    h = sorted(h, key=Card.Card.get_value, reverse=True)
 
     return h
 
 
 def flush(hand):
     i = 0
-    seq = [0, 0, 0, 0, 0]
+    suits = [0, 0, 0, 0]
     while i < len(hand):
-        seq[suit(hand[i][0])] += 1
+        suits[suit(hand[i].get_suit())] += 1
+        i += 1
 
-    if max(seq) >= 5:
-        return True
+    return max(suits) >= 5
 
 
-def sequence(hand):
-    h = sort_hand(hand)
+def straight(h):
     i = 0
     seq = []
 
     while i < len(h):
         if i > 0:
-            if (h[i-1] - h[i] == 1) or (h[i-1] == 14 and h[i] == 2):
+            if (h[i-1].get_value() - h[i].get_value() == 1) or (h[i-1].get_value() == 14 and h[i].get_value() == 2):
                 if i == 1:
                     seq.append(h[0])
                     seq.append(h[1])
                 else:
                     seq.append(h[i])
+            else:
+                seq.clear()
 
-        return len(seq) > 4
+        i += 1
+        if len(seq) > 4:
+            break
+
+    if len(seq) > 4:
+        if flush(seq):
+            return [1, seq[0]]
+        else:
+            return [0, seq[0]]
+    else:
+        return 0
 
 
 def three(hand):
@@ -94,13 +106,22 @@ def count_duplicates(hand, n):
 
 
 def full_house(hand):
-    return three(hand) and pair(hand)
+    fh = [three(hand), pair(hand)]
+    if fh[0] > 0 and fh[1] > 0:
+        return fh
+    else:
+        return []
 
 
 def straight_flush(hand):
-    return flush(hand) and sequence(hand)
+    i = straight(hand)
+    if flush(hand) and i > 0:
+        return i
+    else:
+        return 0
 
 
 def royal_straight_flush(hand):
     h = sort_hand(hand)
-    return flush(hand) and sequence(hand) and (h[len(h)] == 14)
+    i = straight(h)
+    return i[0] > 0 and (h[len(h)] == 14)
